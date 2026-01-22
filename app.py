@@ -11,37 +11,61 @@ st.set_page_config(page_title="FaithVerse – Bible & Study App", layout="wide")
 # IMAGE GENERATOR
 # =========================
 def generate_verse_image(text, title="FaithVerse"):
-    img = Image.new("RGB", (900, 500), color=(44, 62, 80))
+    # Create image
+    img = Image.new("RGB", (1080, 1080), color=(30, 40, 60))
     draw = ImageDraw.Draw(img)
 
-    FONT_PATH = "fonts/Montserrat-Italic-VariableFont_wght.ttf"
+    FONT_PATH = "fonts/Montserrat-Bold.ttf"  # STRONGLY recommended
+    # If you insist on italic, use:
+    # FONT_PATH = "fonts/Montserrat-Italic-VariableFont_wght.ttf"
 
-try:
-    font_big = ImageFont.truetype(FONT_PATH, 64)
-    font_small = ImageFont.truetype(FONT_PATH, 36)
-except Exception as e:
-    st.error(f"Font load failed: {e}")
-    font_big = ImageFont.load_default()
-    font_small = ImageFont.load_default()
+    try:
+        font_big = ImageFont.truetype(FONT_PATH, 64)
+        font_small = ImageFont.truetype(FONT_PATH, 36)
+    except Exception as e:
+        st.error(f"Font load failed: {e}")
+        font_big = ImageFont.load_default()
+        font_small = ImageFont.load_default()
 
-
+    # Word wrap based on pixel width (PROPER way)
+    max_width = 900
     words = text.split()
-    lines, line = [], ""
+    lines = []
+    current_line = ""
+
     for word in words:
-        if len(line + word) < 40:
-            line += word + " "
+        test_line = current_line + word + " "
+        bbox = draw.textbbox((0, 0), test_line, font=font_big)
+        text_width = bbox[2] - bbox[0]
+
+        if text_width <= max_width:
+            current_line = test_line
         else:
-            lines.append(line)
-            line = word + " "
-    lines.append(line)
+            lines.append(current_line.strip())
+            current_line = word + " "
 
-    y = 120
-    for l in lines[:8]:
-        draw.text((50, y), l.strip(), fill="white", font=font_big)
-        y += 45
+    if current_line:
+        lines.append(current_line.strip())
 
-    draw.text((50, 30), title, fill="lightgray", font=font_small)
-    draw.text((50, 460), "© FaithVerse", fill="lightgray", font=font_small)
+    # Title
+    draw.text((60, 40), title, fill="#CCCCCC", font=font_small)
+
+    # Center verse vertically
+    line_height = 80
+    total_height = len(lines) * line_height
+    start_y = (1080 - total_height) // 2
+
+    for i, line in enumerate(lines[:10]):
+        bbox = draw.textbbox((0, 0), line, font=font_big)
+        text_width = bbox[2] - bbox[0]
+        x = (1080 - text_width) // 2
+        y = start_y + i * line_height
+
+        draw.text((x, y), line, fill="white", font=font_big)
+
+    # Footer
+    draw.text((60, 1020), "© FaithVerse", fill="#AAAAAA", font=font_small)
+
     return img
 
 # =========================
