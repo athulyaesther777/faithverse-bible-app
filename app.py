@@ -8,60 +8,37 @@ import io
 st.set_page_config(page_title="FaithVerse – Bible & Study App", layout="wide")
 
 # =========================
-# IMAGE GENERATOR (FIXED)
+# IMAGE GENERATOR
 # =========================
 def generate_verse_image(text, title="FaithVerse"):
-    img = Image.new("RGB", (1080, 1080), color=(30, 40, 60))
+    img = Image.new("RGB", (900, 500), color=(44, 62, 80))
     draw = ImageDraw.Draw(img)
 
     try:
-        font_big = ImageFont.truetype("arial.ttf", 64)
-        font_small = ImageFont.truetype("arial.ttf", 36)
+        font_big = ImageFont.truetype("arial.ttf", 32)
+        font_small = ImageFont.truetype("arial.ttf", 20)
     except:
         font_big = ImageFont.load_default()
         font_small = ImageFont.load_default()
 
-    max_width = 900
-    lines = []
     words = text.split()
-    current_line = ""
-
+    lines, line = [], ""
     for word in words:
-        test_line = current_line + word + " "
-        bbox = draw.textbbox((0, 0), test_line, font=font_big)
-        text_width = bbox[2] - bbox[0]
-
-        if text_width <= max_width:
-            current_line = test_line
+        if len(line + word) < 40:
+            line += word + " "
         else:
-            lines.append(current_line.strip())
-            current_line = word + " "
+            lines.append(line)
+            line = word + " "
+    lines.append(line)
 
-    if current_line:
-        lines.append(current_line.strip())
+    y = 120
+    for l in lines[:8]:
+        draw.text((50, y), l.strip(), fill="white", font=font_big)
+        y += 45
 
-    # Title
-    draw.text((60, 50), title, fill="#DDDDDD", font=font_small)
-
-    # Center verse
-    line_height = 80
-    total_height = len(lines) * line_height
-    start_y = (1080 - total_height) // 2
-
-    for i, line in enumerate(lines[:10]):
-        bbox = draw.textbbox((0, 0), line, font=font_big)
-        text_width = bbox[2] - bbox[0]
-
-        x = (1080 - text_width) // 2
-        y = start_y + i * line_height
-
-        draw.text((x, y), line, fill="white", font=font_big)
-
-    # Footer
-    draw.text((60, 1020), "© FaithVerse", fill="#BBBBBB", font=font_small)
-
+    draw.text((50, 30), title, fill="lightgray", font=font_small)
+    draw.text((50, 460), "© FaithVerse", fill="lightgray", font=font_small)
     return img
-
 
 # =========================
 # BIBLE BOOK ORDER
@@ -155,19 +132,11 @@ if page == "🏠 Home":
     if st.button("Generate Image for First Verse"):
         first = sample.iloc[0]
         verse_text = f"{first['book']} {first['chapter']}:{first['verse']} - {first['text']}"
-
         img = generate_verse_image(verse_text)
-        st.image(img, width=600)   # ✅ IMPORTANT
-
+        st.image(img)
         buf = io.BytesIO()
         img.save(buf, format="PNG")
-
-        st.download_button(
-            "⬇️ Download Verse Image",
-            buf.getvalue(),
-            "faithverse_verse.png",
-            "image/png"
-        )
+        st.download_button("⬇️ Download Verse Image", buf.getvalue(), "faithverse_verse.png", "image/png")
 
 # =========================
 # READ BIBLE
@@ -177,13 +146,9 @@ elif page == "📖 Read Bible":
     available_books = [b for b in BIBLE_BOOK_ORDER if b in bible_df["book"].unique()]
 
     book = st.selectbox("Select Book", available_books)
-    chapter = st.selectbox(
-        "Select Chapter",
-        sorted(bible_df[bible_df["book"] == book]["chapter"].unique())
-    )
+    chapter = st.selectbox("Select Chapter", sorted(bible_df[bible_df["book"] == book]["chapter"].unique()))
 
     chapter_df = bible_df[(bible_df["book"] == book) & (bible_df["chapter"] == chapter)].sort_values("verse")
-
     for _, row in chapter_df.iterrows():
         st.markdown(f"**{int(row['verse'])}.** {row['text']}")
 
@@ -196,7 +161,6 @@ elif page == "👤 People Explorer":
 
     if person_name:
         matches = naves_df[naves_df["subject"].astype(str).str.contains(person_name, case=False, na=False)]
-
         for _, row in matches.iterrows():
             st.subheader(row["subject"])
             for l in row["entry"].split("\n")[:8]:
@@ -242,17 +206,10 @@ elif page == "🎵 Worship Songs":
                 if st.button("Generate Worship Image"):
                     preview = song.split("\n")[1]
                     img = generate_verse_image(preview, title="Worship by Athulya Esther")
-                    st.image(img, width=600)
-
+                    st.image(img)
                     buf = io.BytesIO()
                     img.save(buf, format="PNG")
-
-                    st.download_button(
-                        "⬇️ Download Worship Image",
-                        buf.getvalue(),
-                        "worship_image.png",
-                        "image/png"
-                    )
+                    st.download_button("⬇️ Download Worship Image", buf.getvalue(), "worship_image.png", "image/png")
                 break
 
 # =========================
@@ -261,19 +218,31 @@ elif page == "🎵 Worship Songs":
 elif page == "🙏 Prayer Wall":
     st.title("🙏 Prayer Wall (Anonymous & Faith-Based)")
     prayer_file = "data/prayers.csv"
+
+    # Ensure folder exists
     os.makedirs("data", exist_ok=True)
 
+    # Ensure file exists and is valid
     if not os.path.exists(prayer_file):
-        pd.DataFrame(columns=["name","prayer","status","testimony","date"]).to_csv(prayer_file, index=False)
+        pd.DataFrame(
+            columns=["name","prayer","status","testimony","date"]
+        ).to_csv(prayer_file, index=False)
 
+    # Safe load with fallback
     try:
         prayers_df = pd.read_csv(prayer_file)
-    except:
-        prayers_df = pd.DataFrame(columns=["name","prayer","status","testimony","date"])
+    except Exception:
+        st.warning("⚠️ Prayer file was corrupted. Resetting prayer wall safely.")
+        prayers_df = pd.DataFrame(
+            columns=["name","prayer","status","testimony","date"]
+        )
         prayers_df.to_csv(prayer_file, index=False)
 
+    # =========================
+    # SUBMIT PRAYER
+    # =========================
     st.markdown("## 📝 Submit a Prayer")
-    name = st.text_input("Name (optional)")
+    name = st.text_input("Name (optional or Anonymous)")
     prayer_text = st.text_area("Your Prayer Request")
 
     if st.button("🙏 Submit Prayer"):
@@ -285,26 +254,86 @@ elif page == "🙏 Prayer Wall":
                 "testimony": "",
                 "date": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
             }
-            prayers_df = pd.concat([prayers_df, pd.DataFrame([new_row])], ignore_index=True)
+            prayers_df = pd.concat(
+                [prayers_df, pd.DataFrame([new_row])],
+                ignore_index=True
+            )
             prayers_df.to_csv(prayer_file, index=False)
-            st.success("🤍 Your prayer has been shared.")
+            st.success("🤍 Your prayer has been shared. The community is praying with you.")
+        else:
+            st.error("Please enter a prayer request.")
 
+    # =========================
+    # WAITING ON GOD
+    # =========================
     st.markdown("## 🕊️ Waiting on God")
-    for _, row in prayers_df[prayers_df["status"] == "Waiting on God"].iterrows():
-        st.info(f"🙏 **{row['name']}** — {row['prayer']}")
+    waiting = prayers_df[prayers_df["status"] == "Waiting on God"]
+
+    if waiting.empty:
+        st.info("No prayers yet. Be the first to submit 🙏")
+    else:
+        for _, row in waiting.iterrows():
+            st.info(f"🙏 **{row['name']}** — {row['prayer']}")
+            st.caption(f"📅 {row['date']}")
+
+    # =========================
+    # GOD'S PLAN IS DIFFERENT
+    # =========================
+    st.markdown("## 🌱 God’s Plan is Different")
+    different = prayers_df[prayers_df["status"] == "God’s Plan is Different"]
+
+    if different.empty:
+        st.caption("None yet. Trusting God’s wisdom 🤍")
+    else:
+        for _, row in different.iterrows():
+            st.warning(f"🌱 **{row['name']}** — {row['prayer']}")
+            st.caption(f"📅 {row['date']}")
+
+    # =========================
+    # PRAISE REPORTS
+    # =========================
+    st.markdown("## 🌟 Praise Reports (Answered)")
+    answered = prayers_df[prayers_df["status"] == "Answered – Praise"]
+
+    if answered.empty:
+        st.caption("No praise reports yet. We believe they are coming 🙏")
+    else:
+        for _, row in answered.iterrows():
+            st.success(f"🌟 **{row['name']}** — {row['testimony']}")
+            st.caption("Original Prayer:")
+            st.write(row["prayer"])
+            st.caption(f"📅 {row['date']}")
+
 
 # =========================
 # PRAYER ANALYTICS
 # =========================
 elif page == "📊 Prayer Analytics":
-    st.title("📊 Prayer Analytics")
+    st.title("📊 Prayer Analytics (Ministry View)")
     prayer_file = "data/prayers.csv"
 
-    if os.path.exists(prayer_file):
-        prayers_df = pd.read_csv(prayer_file)
+    if not os.path.exists(prayer_file):
+        st.warning("No prayer data yet.")
+    else:
+        try:
+            prayers_df = pd.read_csv(prayer_file)
+        except Exception:
+            st.error("Prayer data is corrupted. No analytics available.")
+            st.stop()
+
         st.metric("Total Prayers", len(prayers_df))
         st.metric("Waiting on God", (prayers_df["status"] == "Waiting on God").sum())
-        st.metric("Answered", (prayers_df["status"] == "Answered – Praise").sum())
+        st.metric("God’s Plan Different", (prayers_df["status"] == "God’s Plan is Different").sum())
+        st.metric("Answered (Praise)", (prayers_df["status"] == "Answered – Praise").sum())
+
+        if "date" in prayers_df.columns:
+            prayers_df["date_only"] = pd.to_datetime(
+                prayers_df["date"], errors="coerce"
+            ).dt.date
+
+            trend = prayers_df.groupby("date_only").size()
+            st.line_chart(trend)
+
 
 # =========================
 # FOOTER
