@@ -14,7 +14,7 @@ def generate_verse_image(text, title="FaithVerse"):
     img = Image.new("RGB", (900, 500), color=(44, 62, 80))
     draw = ImageDraw.Draw(img)
 
-    FONT_PATH = "fonts/Montserrat-Bold.ttf"
+    FONT_PATH = "fonts/Montserrat-Italic-VariableFont_wght.ttf"
 
 try:
     font_big = ImageFont.truetype(FONT_PATH, 64)
