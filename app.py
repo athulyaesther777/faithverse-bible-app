@@ -14,12 +14,16 @@ def generate_verse_image(text, title="FaithVerse"):
     img = Image.new("RGB", (900, 500), color=(44, 62, 80))
     draw = ImageDraw.Draw(img)
 
-    try:
-        font_big = ImageFont.truetype("arial.ttf", 32)
-        font_small = ImageFont.truetype("arial.ttf", 20)
-    except:
-        font_big = ImageFont.load_default()
-        font_small = ImageFont.load_default()
+    FONT_PATH = "fonts/Montserrat-Bold.ttf"
+
+try:
+    font_big = ImageFont.truetype(FONT_PATH, 64)
+    font_small = ImageFont.truetype(FONT_PATH, 36)
+except Exception as e:
+    st.error(f"Font load failed: {e}")
+    font_big = ImageFont.load_default()
+    font_small = ImageFont.load_default()
+
 
     words = text.split()
     lines, line = [], ""
