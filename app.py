@@ -10,35 +10,50 @@ st.set_page_config(page_title="FaithVerse – Bible & Study App", layout="wide")
 # =========================
 # IMAGE GENERATOR
 # =========================
+from textwrap import wrap
+
 def generate_verse_image(text, title="FaithVerse"):
     img = Image.new("RGB", (900, 500), color=(44, 62, 80))
     draw = ImageDraw.Draw(img)
 
     try:
-        font_big = ImageFont.truetype("arial.ttf", 32)
-        font_small = ImageFont.truetype("arial.ttf", 20)
+        font_big = ImageFont.truetype("arial.ttf", 30)
+        font_small = ImageFont.truetype("arial.ttf", 18)
     except:
         font_big = ImageFont.load_default()
         font_small = ImageFont.load_default()
 
+    max_width = 800  # max text width in pixels
+    lines = []
     words = text.split()
-    lines, line = [], ""
+    current_line = ""
+
     for word in words:
-        if len(line + word) < 40:
-            line += word + " "
+        test_line = current_line + word + " "
+        w, h = draw.textbbox((0, 0), test_line, font=font_big)[2:]
+        if w <= max_width:
+            current_line = test_line
         else:
-            lines.append(line)
-            line = word + " "
-    lines.append(line)
+            lines.append(current_line)
+            current_line = word + " "
 
-    y = 120
-    for l in lines[:8]:
+    if current_line:
+        lines.append(current_line)
+
+    # Draw title
+    draw.text((50, 25), title, fill="lightgray", font=font_small)
+
+    # Draw verse text
+    y = 100
+    for l in lines[:10]:
         draw.text((50, y), l.strip(), fill="white", font=font_big)
-        y += 45
+        y += 38  # tighter spacing
 
-    draw.text((50, 30), title, fill="lightgray", font=font_small)
+    # Footer
     draw.text((50, 460), "© FaithVerse", fill="lightgray", font=font_small)
+
     return img
+
 
 # =========================
 # BIBLE BOOK ORDER
