@@ -17,7 +17,7 @@ def generate_verse_image(text, title="FaithVerse"):
 
     try:
         font_big = ImageFont.truetype("arial.ttf", 42)
-        font_small = ImageFont.truetype("arial.ttf", 22)
+        font_small = ImageFont.truetype("arial.ttf", 55)
     except:
         font_big = ImageFont.load_default()
         font_small = ImageFont.load_default()
