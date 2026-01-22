@@ -1,0 +1,145 @@
+{
+  "Happy": {
+    "emoji": "😊",
+    "encouragement": "Rejoice in the blessings God has given you today.",
+    "prayer": "Lord, thank You for the joy and blessings in my life. Help me to remain grateful.",
+    "verses": [
+      {
+        "reference": "Psalm 118:24",
+        "text": "This is the day that the Lord has made; let us rejoice and be glad in it."
+      },
+      {
+        "reference": "Philippians 4:4",
+        "text": "Rejoice in the Lord always. I will say it again: Rejoice!"
+      },
+      {
+        "reference": "Nehemiah 8:10",
+        "text": "Do not grieve, for the joy of the Lord is your strength."
+      },
+      {
+        "reference": "Psalm 16:11",
+        "text": "You make known to me the path of life; in your presence there is fullness of joy."
+      }
+    ]
+  },
+
+  "Sad": {
+    "emoji": "😔",
+    "encouragement": "God sees your tears and walks with you in every sorrow.",
+    "prayer": "Lord, please comfort my heart and lift my spirit.",
+    "verses": [
+      {
+        "reference": "Psalm 34:18",
+        "text": "The Lord is close to the brokenhearted and saves those who are crushed in spirit."
+      },
+      {
+        "reference": "Matthew 5:4",
+        "text": "Blessed are those who mourn, for they will be comforted."
+      },
+      {
+        "reference": "John 16:22",
+        "text": "So with you: Now is your time of grief, but I will see you again and you will rejoice."
+      },
+      {
+        "reference": "Lamentations 3:31-32",
+        "text": "For no one is cast off by the Lord forever. Though he brings grief, he will show compassion."
+      }
+    ]
+  },
+
+  "Anxious": {
+    "emoji": "😰",
+    "encouragement": "God is bigger than every worry you carry.",
+    "prayer": "Lord, I give You my worries and fears. Please fill me with Your peace.",
+    "verses": [
+      {
+        "reference": "Philippians 4:6-7",
+        "text": "Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God."
+      },
+      {
+        "reference": "1 Peter 5:7",
+        "text": "Cast all your anxiety on him because he cares for you."
+      },
+      {
+        "reference": "Matthew 6:34",
+        "text": "Therefore do not worry about tomorrow, for tomorrow will worry about itself."
+      },
+      {
+        "reference": "Isaiah 41:10",
+        "text": "So do not fear, for I am with you; do not be dismayed, for I am your God."
+      }
+    ]
+  },
+
+  "Angry": {
+    "emoji": "😡",
+    "encouragement": "God helps us respond with love even when we feel hurt.",
+    "prayer": "Lord, calm my heart and help me respond with grace and forgiveness.",
+    "verses": [
+      {
+        "reference": "Ephesians 4:26",
+        "text": "In your anger do not sin: Do not let the sun go down while you are still angry."
+      },
+      {
+        "reference": "Proverbs 15:1",
+        "text": "A gentle answer turns away wrath, but a harsh word stirs up anger."
+      },
+      {
+        "reference": "James 1:19-20",
+        "text": "Everyone should be quick to listen, slow to speak and slow to become angry."
+      },
+      {
+        "reference": "Proverbs 16:32",
+        "text": "Better a patient person than a warrior, one with self-control than one who takes a city."
+      }
+    ]
+  },
+
+  "Calm": {
+    "emoji": "😌",
+    "encouragement": "Rest in the peace that only God can give.",
+    "prayer": "Lord, thank You for Your peace that guards my heart and mind.",
+    "verses": [
+      {
+        "reference": "John 14:27",
+        "text": "Peace I leave with you; my peace I give you."
+      },
+      {
+        "reference": "Psalm 4:8",
+        "text": "In peace I will lie down and sleep, for you alone, Lord, make me dwell in safety."
+      },
+      {
+        "reference": "Isaiah 26:3",
+        "text": "You will keep in perfect peace those whose minds are steadfast, because they trust in you."
+      },
+      {
+        "reference": "Colossians 3:15",
+        "text": "Let the peace of Christ rule in your hearts."
+      }
+    ]
+  },
+
+  "Down": {
+    "emoji": "😞",
+    "encouragement": "Even in low moments, God is lifting you up.",
+    "prayer": "Lord, please renew my strength and give me hope.",
+    "verses": [
+      {
+        "reference": "Isaiah 40:31",
+        "text": "But those who hope in the Lord will renew their strength."
+      },
+      {
+        "reference": "Psalm 42:11",
+        "text": "Why, my soul, are you downcast? Put your hope in God."
+      },
+      {
+        "reference": "2 Corinthians 4:16",
+        "text": "Therefore we do not lose heart. Though outwardly we are wasting away, inwardly we are being renewed."
+      },
+      {
+        "reference": "Romans 15:13",
+        "text": "May the God of hope fill you with all joy and peace as you trust in him."
+      }
+    ]
+  }
+}
